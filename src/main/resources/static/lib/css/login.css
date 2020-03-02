@@ -1,0 +1,21 @@
+/*@import url('../noto.css');*/
+
+body  {font-family:'notoSansR','Malgun Gothic', '맑은 고딕'; background:#ecf0f5 repeat 0 0;}
+
+/* -------------------------------- login --------------------------------  */
+.login-body {display: flex;justify-content:center;align-items:center;height:95vh;}
+/* .login-body {height:100%; background:#586579 url('../images/login/bg_login_pattern.png') repeat 0 0;} */
+.login-wrap {/* position:absolute;left:33%;top:30%; */ margin:auto;/*width:616px;*/ height:330px; background:#fff;border-radius:10px;box-shadow:3px 3px 5px rgba(0, 0, 0, 0.3);}
+.login-wrap .login-logo {position:absolute; top:-48px; left:7px;}
+.login-wrap .login-form-box {height:100%; padding:61px 35px 0 252px; background:url('../img/login/bg_img_login.png') no-repeat 0 0;}
+.login-form-box fieldset {margin-top:15px; text-align:center; }
+.login-form-box .logForm {position:relative; height:47px;  background:#fff;}
+.login-form-box .logForm input{width:329px; height:46px;  padding:0 18px 0 64px; color:#333; font-size:15px;  border:0; border-bottom:1px solid #b6b6b6;  -webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;background-color:#fff;}
+.login-form-box .logForm input:focus {border-bottom:1px solid #009fe3;}
+.login-form-box .logForm label {position:absolute; text-indent:-9999px;}
+.login-form-box .logForm.username label {top:18px; left:19px; width:19px; height:19px; background:url('../img/login/ico_id.png') no-repeat 0 0;}
+.login-form-box .logForm.password label {top:14px; left:21px; width:16px; height:22px; background:url('../img/login/ico_password.png') no-repeat 0 0;}
+.login-form-box .checkforms {padding:10px 0 0 22px; text-align:left;}
+.login-form-box .checkforms .idcheck label {display:inline-block;margin-left:5px;  font-size:14px; color:#333; vertical-align:bottom; }
+.login-form-box .submit {min-width:125px; height:34px;  margin-top:23px; color:#fff; border-radius:20px; border:0;  background:#409ee8;}
+.login-form-box .submit-disabled {min-width:125px; height:34px;  margin-top:23px; color:#fff; border-radius:20px; border:0;}

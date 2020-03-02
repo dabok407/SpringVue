@@ -1,0 +1,523 @@
+<html lang="ko"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org/" xmlns:v-on="http://www.w3.org/1999/xhtml"
+      xmlns:v-bind="http://www.w3.org/1999/xhtml">
+
+<!-- head Start-->
+<div th:replace="fragment/head :: head"></div>
+<!-- head End-->
+
+
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+
+
+    <!-- HEADER Start -->
+    <div th:replace="fragment/headerTitle :: headerTitle"></div>
+    <!-- HEADER End -->
+
+    <!-- Side Menu Start -->
+    <div th:replace="fragment/sideMenu :: sideMenu(${code},${menuList})"></div>
+    <!-- Side Menu End -->
+
+
+    <!-- Contents-->
+    <div class="content-wrapper">
+        <section class="content-header">
+            <h1>
+                주문
+                <small>주문 관리</small>
+            </h1>
+            <ol class="breadcrumb">
+                <li><a href="#"><i class="fa fa-dashboard"></i>주문</a></li>
+                <li class="active">주문 관리</li>
+            </ol>
+        </section>
+
+        <section class="content">
+
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="box box-danger">
+                        <div class="box-header with-border">
+                            <h3 class="box-title"></h3>
+                        </div>
+                        <div class="box-body">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <label for="user_account">주문자</label>
+                                    <input id="user_account" type="text" class="form-control" placeholder="주문자">
+                                </div>
+                                <div class="col-xs-3">
+                                    <label for="status">상태</label>
+                                    <select id="status" class="form-control">
+                                        <option value="">전체</option>
+                                        <option value="ORDERING">ORDERING</option>
+                                        <option value="CONFIRM">CONFIRM</option>
+                                        <option value="COMPLETE">COMPLETE</option>
+                                    </select>
+                                </div>
+                                <div class="col-xs-3">
+                                    <label for="revName">이름</label>
+                                    <input id="revName" type="text" class="form-control" placeholder="이름">
+                                </div>
+                                <div class="col-xs-3">
+                                    <label for="paymentType">결제</label>
+                                    <select id="paymentType"  class="form-control">
+                                        <option value="">전체</option>
+                                        <option value="CARD">CARD</option>
+                                        <option value="CHECK_CARD">CHECK_CARD</option>
+                                        <option value="BANK_TRANSFER">BANK_TRANSFER</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="box-footer">
+                            <button id="search" type="submit" class="btn btn-primary bg-light-blue-gradient pull-right">검색</button>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- row end-->
+
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="box">
+                        <div class="box-header">
+                            <h3 class="box-title">결과</h3>
+                            <button type="button" class="btn btn-primary" id="registPopupBtn" style="float: right">주문 등록</button>
+                        </div>
+                        <!-- /.box-header -->
+                        <div class="box-body">
+                            <div id="example2_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
+                                <div class="row">
+                                    <div class="col-sm-6"></div>
+                                    <div class="col-sm-6"></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <table id="example2" class="table table-bordered table-hover dataTable"
+                                               role="grid" aria-describedby="example2_info">
+
+                                            <thead>
+                                            <tr role="row">
+                                                <th class="text-center bg-light-blue-gradient" tabindex="0" rowspan="1" colspan="1">
+                                                    id
+                                                </th>
+                                                <th class="text-center bg-light-blue-gradient" tabindex="0" rowspan="1" colspan="1">
+                                                    주문자
+                                                </th>
+                                                <th class="text-center bg-light-blue-gradient" tabindex="0" rowspan="1" colspan="1">
+                                                    상태
+                                                </th>
+                                                <th class="text-center bg-light-blue-gradient" tabindex="0" rowspan="1" colspan="1">
+                                                    주문형태
+                                                </th>
+                                                <th class="text-center bg-light-blue-gradient" tabindex="0" rowspan="1" colspan="1">
+                                                    주소
+                                                </th>
+                                                <th class="text-center bg-light-blue-gradient" tabindex="0" rowspan="1" colspan="1">
+                                                    이름
+                                                </th>
+                                                <th class="text-center bg-light-blue-gradient" tabindex="0" rowspan="1" colspan="1">
+                                                    구매형태
+                                                </th>
+                                                <th class="text-center bg-light-blue-gradient" tabindex="0" rowspan="1" colspan="1">
+                                                    총 가격
+                                                </th>
+                                                <th class="text-center bg-light-blue-gradient" tabindex="0" rowspan="1" colspan="1">
+                                                    수량
+                                                </th>
+                                                <th class="text-center bg-light-blue-gradient" tabindex="0" rowspan="1" colspan="1">
+                                                    주문일
+                                                </th>
+                                                <th class="text-center bg-light-blue-gradient" tabindex="0" rowspan="1" colspan="1">
+                                                    배송일
+                                                </th>
+                                            </tr>
+                                            </thead>
+                                            <tbody id="itemList">
+                                            <tr role="row" class="odd" v-for="(dto, index) in itemList" v-on:click="click(itemList[index].id)">
+                                                <td class="text-center">{{dto.id}}</td>
+                                                <td class="text-center">{{dto.user_account}}</td>
+                                                <td class="text-center">{{dto.status}}</td>
+                                                <td class="text-center">{{dto.order_type}}</td>
+                                                <td class="text-center">{{dto.rev_address}}</td>
+                                                <td class="text-center">{{dto.rev_name}}</td>
+                                                <td class="text-center">{{dto.payment_type}}</td>
+                                                <td class="text-right">{{dto.total_price}}</td>
+                                                <td class="text-right">{{dto.total_quantity}}</td>
+                                                <td class="text-center">{{dto.order_at}}</td>
+                                                <td class="text-center">{{dto.arrival_date}}</td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-5">
+                                        <div id="showPage" class="dataTables_info" role="status" aria-live="polite">
+                                            Showing {{currentPage}} to 10 of {{totalElements}} entries
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-7">
+                                        <div class="dataTables_paginate paging_simple_numbers" id="pageBtn">
+                                            <ul class="pagination">
+                                                <li class="paginate_button previous" id="previousBtn">
+                                                    <a href="javascript:;" v-on:click="previousClick()">이전</a>
+                                                </li>
+
+                                                <li class="paginate_button" v-for="btn in btnList" v-bind:btn_id="btn" v-on:click="indexClick(btn)">
+                                                    <a href="javascript:;" aria-controls="example2">{{btn}}</a>
+                                                </li>
+
+                                                <li class="paginate_button next" id="nextBtn">
+                                                    <a href="javascript:;" v-on:click="nextClick()">다음</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!--<div id="modalContentDiv"></div>-->
+
+        <!-- Regist Modal Popup Start -->
+        <!--<script type="text/x-template" id="regist-template">-->
+            <div id="orderRegistModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"> <!--style="display: none;"-->
+                <div class="modal-dialog modal-wide-layout" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" id="registCloseModalTopBtn" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                            <h2 class="modal-title modal-center" id="myModalLabel">주문 등록</h2>
+                        </div>
+                        <form id="registForm" class="modal-form">
+                            <div class="modal-body">
+                                <table id="registTable" class="table dataTable" role="grid" aria-describedby="example2_info">
+                                    <thead>
+                                        <col width="25%" />
+                                        <col width="25%" />
+                                        <col width="25%" />
+                                        <col width="25%" />
+                                    </thead>
+                                    <tbody>
+                                    <tr role="row">
+                                        <th class="text-left modal-table-th" tabindex="0" rowspan="1" colspan="2">
+                                            주문자
+                                            <span style="color: #FF5B6B;">&nbsp;*</span>
+                                        </th>
+                                        <th class="text-left modal-table-th" tabindex="0" rowspan="1" colspan="2">
+                                            상태
+                                            <span style="color: #FF5B6B;">&nbsp;*</span>
+                                        </th>
+                                    </tr>
+                                    <tr role="row" class="odd">
+                                        <td class="text-left" colspan="2">
+                                            <input type="text" id="reg_user_account" name="user_account" class="inputV3">
+                                            <input type="hidden" id="reg_user_id" name="user_id" value="1">
+                                            <input type="hidden" id="reg_total_quantity" name="total_quantity" value="1">
+                                        </td>
+                                        <td class="text-left" colspan="2">
+                                            <select id="reg_status" name="status" class="selectV3">
+                                                <option value="ORDERING">ORDERING</option>
+                                                <option value="CONFIRM">CONFIRM</option>
+                                                <option value="COMPLETE">COMPLETE</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr role="row">
+                                        <th class="text-left modal-table-th" tabindex="0" rowspan="1" colspan="2">
+                                            타입
+                                            <span style="color: #FF5B6B;">&nbsp;*</span>
+                                        </th>
+                                        <th class="text-left modal-table-th" tabindex="0" rowspan="1" colspan="2">
+                                            결제
+                                            <span style="color: #FF5B6B;">&nbsp;*</span>
+                                        </th>
+                                    </tr>
+                                    <tr role="row" class="odd">
+                                        <td class="text-left" colspan="2">
+                                            <select id="reg_order_type" name="order_type" class="selectV3">
+                                                <option value="ALL">ALL</option>
+                                                <option value="EACH">EACH</option>
+                                            </select>
+                                        </td>
+                                        <td class="text-left" colspan="2">
+                                            <select id="reg_payment_type" name="payment_type" class="selectV3">
+                                                <option value="CARD">CARD</option>
+                                                <option value="CHECK_CARD">CHECK_CARD</option>
+                                                <option value="BANK_TRANSFER">BANK_TRANSFER</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr role="row">
+                                        <th class="text-left modal-table-th" tabindex="0" rowspan="1" colspan="1">
+                                            이름
+                                            <span style="color: #FF5B6B;">&nbsp;*</span>
+                                        </th>
+                                        <th class="text-left modal-table-th" tabindex="0" rowspan="1" colspan="3">
+                                            주소
+                                            <span style="color: #FF5B6B;">&nbsp;*</span>
+                                        </th>
+                                    </tr>
+                                    <tr role="row" class="odd">
+                                        <td class="text-left" colspan="1">
+                                            <input type="text" id="reg_rev_name" name="rev_name" class="inputV3">
+                                        </td>
+                                        <td class="text-left" colspan="3">
+                                            <input type="text" id="reg_rev_address" name="rev_address" class="inputV3">
+                                        </td>
+                                    </tr>
+                                    <tr role="row">
+                                        <th class="text-left modal-table-th" tabindex="0" rowspan="1" colspan="4" style="pointer-events:auto;">
+                                            주문상품
+                                            <div style="float:right">
+                                                <button type="button" class="btn btn-primary inner-btn" id="itemRegistPopupBtn" style="float:right; margin-left: 5px;">상품 추가</button>
+                                                <button type="button" class="btn btn-warning inner-btn" id="itemRegistDeleteBtn" style="float:right;">상품 삭제</button>
+                                            </div>
+                                        </th>
+                                    </tr>
+                                    <tr role="row" class="odd">
+                                        <td class="text-left" colspan="4">
+                                            <div style="overflow-y:auto; height:290px;">
+                                                <table id="registFormItemTable" class="table table-bordered table-hover dataTable" role="grid" aria-describedby="example2_info">
+                                                    <colgroup>
+                                                        <col width="5%" />
+                                                        <col width="30%" />
+                                                        <col width="20%" />
+                                                        <col width="15%" />
+                                                        <col width="20%" />
+                                                    </colgroup>
+                                                    <thead>
+                                                    <tr role="row">
+                                                        <th class="text-center bg-light-blue-gradient" tabindex="0" rowspan="1" colspan="1">
+                                                            <input type="checkbox" id="allCheck" style="width:18px;height:18px;">
+                                                        </th>
+                                                        <th class="text-center bg-light-blue-gradient" tabindex="0" rowspan="1" colspan="1">
+                                                            상품명
+                                                        </th>
+                                                        <th class="text-center bg-light-blue-gradient" tabindex="0" rowspan="1" colspan="1">
+                                                            상태
+                                                        </th>
+                                                        <th class="text-center bg-light-blue-gradient" tabindex="0" rowspan="1" colspan="1">
+                                                            수량
+                                                        </th>
+                                                        <th class="text-center bg-light-blue-gradient" tabindex="0" rowspan="1" colspan="1">
+                                                            가격
+                                                        </th>
+                                                        <th class="text-center bg-light-blue-gradient" tabindex="0" rowspan="1" colspan="1">
+                                                            기능
+                                                        </th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="3" class="text-right"><span style="font-size: 25px;">Total</span></td>
+                                        <td style="font-size: 25px;">
+                                            <span id="reg_total_price_text">0</span>
+                                            <span>원</span>
+                                            <input type="hidden" id="reg_total_price" name="total_price" value="">
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </form>
+                        <div class="modal-footer" style="text-align: center">
+                            <button type="button" class="btn btn-primary btn-wide" id="registBtn">등록</button>
+                            <!--<button type="button" class="btn btn-warning" id="registCloseModalBtn">취소</button>-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <!--</script>-->
+        <!-- Regist Modal Popup End -->
+
+
+        <!-- Modify Modal Popup Start -->
+        <!--<script type="text/x-template" id="modify-template">-->
+            <div id="orderModifyModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"> <!--style="display: none;"-->
+                <div class="modal-dialog modal-wide-layout" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" id="modifyCloseModalTopBtn" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                            <h2 class="modal-title modal-center">주문 상세</h2>
+                        </div>
+                        <form id="modifyForm" class="modal-form">
+                            <div class="modal-body">
+                                <table id="modifyTable" class="table dataTable" role="grid" aria-describedby="example2_info">
+                                    <thead>
+                                    <col width="25%" />
+                                    <col width="25%" />
+                                    <col width="25%" />
+                                    <col width="25%" />
+                                    </thead>
+                                    <tbody>
+                                    <tr role="row">
+                                        <th class="text-left modal-table-th" tabindex="0" rowspan="1" colspan="2">
+                                            주문자
+                                            <span style="color: #FF5B6B;">&nbsp;*</span>
+                                        </th>
+                                        <th class="text-left modal-table-th" tabindex="0" rowspan="1" colspan="2">
+                                            상태
+                                            <span style="color: #FF5B6B;">&nbsp;*</span>
+                                        </th>
+                                    </tr>
+                                    <tr role="row" class="odd">
+                                        <td class="text-left" colspan="2">
+                                            <input type="text" id="mod_user_account" name="user_account" class="inputV3">
+                                            <input type="hidden" id="mod_group_id" name="id">
+                                            <input type="hidden" id="mod_user_id" name="user_id" value="1">
+                                            <input type="hidden" id="mod_total_quantity" name="total_quantity" value="1">
+                                        </td>
+                                        <td class="text-left" colspan="2">
+                                            <select id="mod_status" name="status" class="selectV3">
+                                                <option value="ORDERING">ORDERING</option>
+                                                <option value="CONFIRM">CONFIRM</option>
+                                                <option value="COMPLETE">COMPLETE</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr role="row">
+                                        <th class="text-left modal-table-th" tabindex="0" rowspan="1" colspan="2">
+                                            타입
+                                            <span style="color: #FF5B6B;">&nbsp;*</span>
+                                        </th>
+                                        <th class="text-left modal-table-th" tabindex="0" rowspan="1" colspan="2">
+                                            결제
+                                            <span style="color: #FF5B6B;">&nbsp;*</span>
+                                        </th>
+                                    </tr>
+                                    <tr role="row" class="odd">
+                                        <td class="text-left" colspan="2">
+                                            <select id="mod_order_type" name="order_type" class="selectV3">
+                                                <option value="ALL">ALL</option>
+                                                <option value="EACH">EACH</option>
+                                            </select>
+                                        </td>
+                                        <td class="text-left" colspan="2">
+                                            <select id="mod_payment_type" name="payment_type" class="selectV3">
+                                                <option value="CARD">CARD</option>
+                                                <option value="CHECK_CARD">CHECK_CARD</option>
+                                                <option value="BANK_TRANSFER">BANK_TRANSFER</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr role="row">
+                                        <th class="text-left modal-table-th" tabindex="0" rowspan="1" colspan="1">
+                                            이름
+                                            <span style="color: #FF5B6B;">&nbsp;*</span>
+                                        </th>
+                                        <th class="text-left modal-table-th" tabindex="0" rowspan="1" colspan="3">
+                                            주소
+                                            <span style="color: #FF5B6B;">&nbsp;*</span>
+                                        </th>
+                                    </tr>
+                                    <tr role="row" class="odd">
+                                        <td class="text-left" colspan="1">
+                                            <input type="text" id="mod_rev_name" name="rev_name" class="inputV3">
+                                        </td>
+                                        <td class="text-left" colspan="3">
+                                            <input type="text" id="mod_rev_address" name="rev_address" class="inputV3">
+                                        </td>
+                                    </tr>
+                                    <tr role="row">
+                                        <th class="text-left modal-table-th" tabindex="0" rowspan="1" colspan="4" style="pointer-events:auto;">
+                                            주문상품
+                                            <div style="float:right">
+                                                <button type="button" class="btn btn-primary inner-btn" id="itemModifyPopupBtn" style="float:right; margin-left: 5px;">상품 추가</button>
+                                                <button type="button" class="btn btn-warning inner-btn" id="itemModifyDeleteBtn" style="float:right;">상품 삭제</button>
+                                            </div>
+                                        </th>
+                                    </tr>
+                                    <tr role="row" class="odd">
+                                        <td class="text-left" colspan="4">
+                                            <div style="overflow-y:auto; height:290px;">
+                                                <table id="modifyFormItemTable" class="table table-bordered table-hover dataTable" role="grid" aria-describedby="example2_info">
+                                                    <colgroup>
+                                                        <col width="5%" />
+                                                        <col width="30%" />
+                                                        <col width="20%" />
+                                                        <col width="20%" />
+                                                        <col width="20%" />
+                                                    </colgroup>
+                                                    <thead>
+                                                    <tr role="row">
+                                                        <th class="text-center bg-light-blue-gradient" tabindex="0" rowspan="1" colspan="1">
+                                                            <input type="checkbox" id="modAllCheck" style="width:18px;height:18px;">
+                                                        </th>
+                                                        <th class="text-center bg-light-blue-gradient" tabindex="0" rowspan="1" colspan="1">
+                                                            상품명
+                                                        </th>
+                                                        <th class="text-center bg-light-blue-gradient" tabindex="0" rowspan="1" colspan="1">
+                                                            상태
+                                                        </th>
+                                                        <th class="text-center bg-light-blue-gradient" tabindex="0" rowspan="1" colspan="1">
+                                                            수량
+                                                        </th>
+                                                        <th class="text-center bg-light-blue-gradient" tabindex="0" rowspan="1" colspan="1">
+                                                            가격
+                                                        </th>
+                                                        <th class="text-center bg-light-blue-gradient" tabindex="0" rowspan="1" colspan="1">
+                                                            기능
+                                                        </th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="3" class="text-right"><span style="font-size: 25px;">Total</span></td>
+                                        <td style="font-size: 25px; float: right; margin-right: 10px;">
+                                            <span id="mod_total_price_text">0</span>
+                                            <span>원</span>
+                                            <input type="hidden" id="mod_total_price" name="total_price" value="">
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </form>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" id="modifyBtn">수정</button>
+                            <button type="button" class="btn btn-warning" id="deleteBtn">삭제</button>
+                            <button type="button" class="btn btn" id="modifyCloseModalBtn">취소</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <!--</script>-->
+        <!-- Modify Modal Popup End -->
+
+    </div>
+    <!-- Content End -->
+
+    <!-- Footer Start -->
+    <div th:replace="fragment/footer :: footer"></div>
+    <!-- Footer End -->
+
+    <!-- controlSidebar Start -->
+    <div th:replace="fragment/controlSidebar :: controlSidebar"></div>
+    <!-- controlSidebar End -->
+
+
+    <div class="control-sidebar-bg"></div>
+</div>
+
+
+<script src="/app/order/orderGroup.js"></script>
+</body>
+</html>

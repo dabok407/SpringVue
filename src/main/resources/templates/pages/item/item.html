@@ -1,0 +1,447 @@
+<html lang="ko"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org/" xmlns:v-on="http://www.w3.org/1999/xhtml"
+      xmlns:v-bind="http://www.w3.org/1999/xhtml">
+
+<!-- head Start-->
+<div th:replace="fragment/head :: head"></div>
+<!-- head End-->
+
+
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+
+
+    <!-- HEADER Start -->
+    <div th:replace="fragment/headerTitle :: headerTitle"></div>
+    <!-- HEADER End -->
+
+    <!-- Side Menu Start -->
+    <div th:replace="fragment/sideMenu :: sideMenu(${code},${menuList})"></div>
+    <!-- Side Menu End -->
+
+
+    <!-- Contents-->
+    <div class="content-wrapper">
+        <section class="content-header">
+            <h1>
+                상품
+                <small>상품 관리</small>
+            </h1>
+            <ol class="breadcrumb">
+                <li><a href="#"><i class="fa fa-dashboard"></i>상품</a></li>
+                <li class="active">상품 관리</li>
+            </ol>
+        </section>
+
+        <section class="content">
+
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="box box-danger">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">검색조건</h3>
+                        </div>
+                        <div class="box-body">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <label for="account">상품</label>
+                                    <input id="account" type="text" class="form-control" placeholder="상품">
+                                </div>
+                                <div class="col-xs-3">
+                                    <label for="status">상태</label>
+                                    <select id="status" class="form-control">
+                                        <option value="">상태</option>
+                                        <option value="REGISTERED">REGISTERED</option>
+                                        <option value="UNREGISTERED">UNREGISTERED</option>
+                                    </select>
+                                </div>
+                                <div class="col-xs-3">
+                                    <label for="brandName">브랜드</label>
+                                    <input id="brandName" type="text" class="form-control" placeholder="브랜드">
+                                </div>
+                                <div class="col-xs-3">
+                                    <label for="partnerName">파트너</label>
+                                    <input id="partnerName" type="text" class="form-control" placeholder="파트너">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="box-footer">
+                            <button id="search" type="submit" class="btn btn-primary bg-light-blue-gradient pull-right">검색</button>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- row end-->
+
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="box">
+                        <div class="box-header">
+                            <h3 class="box-title">상품 목록</h3>
+                            <button type="button" class="btn btn-primary" id="registPopupBtn" style="float: right">상품 등록</button>
+                        </div>
+                        <!-- /.box-header -->
+                        <div class="box-body">
+                            <div id="example2_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
+                                <div class="row">
+                                    <div class="col-sm-6"></div>
+                                    <div class="col-sm-6"></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <table id="example2" class="table table-bordered table-hover dataTable"
+                                               role="grid" aria-describedby="example2_info">
+
+                                            <thead>
+                                            <tr role="row">
+                                                <th class="text-center bg-light-blue-gradient" tabindex="0" rowspan="1" colspan="1">
+                                                    id
+                                                </th>
+                                                <th class="text-center bg-light-blue-gradient" tabindex="0" rowspan="1" colspan="1">
+                                                    상품
+                                                </th>
+                                                <th class="text-center bg-light-blue-gradient" tabindex="0" rowspan="1" colspan="1">
+                                                    상태
+                                                </th>
+                                                <th class="text-center bg-light-blue-gradient" tabindex="0" rowspan="1" colspan="1">
+                                                    설명
+                                                </th>
+                                                <th class="text-center bg-light-blue-gradient" tabindex="0" rowspan="1" colspan="1">
+                                                    가격
+                                                </th>
+                                                <th class="text-center bg-light-blue-gradient" tabindex="0" rowspan="1" colspan="1">
+                                                    브랜드
+                                                </th>
+                                                <th class="text-center bg-light-blue-gradient" tabindex="0" rowspan="1" colspan="1">
+                                                    파트너
+                                                </th>
+                                                <th class="text-center bg-light-blue-gradient" tabindex="0" rowspan="1" colspan="1">
+                                                    가입일
+                                                </th>
+                                                <th class="text-center bg-light-blue-gradient" tabindex="0" rowspan="1" colspan="1">
+                                                    해지일
+                                                </th>
+                                            </tr>
+                                            </thead>
+                                            <tbody id="itemList">
+                                            <tr role="row" class="odd" v-for="(dto, index) in itemList" v-on:click="click(itemList[index].id)">
+                                                <td class="text-center">{{dto.id}}</td>
+                                                <td class="text-center">{{dto.name}}</td>
+                                                <td class="text-center">{{dto.status}}</td>
+                                                <td class="text-center">{{dto.content}}</td>
+                                                <td class="text-center">{{dto.price}}</td>
+                                                <td class="text-center">{{dto.brand_name}}</td>
+                                                <td class="text-center">{{dto.partner.name}}</td>
+                                                <td class="text-center">{{dto.registered_at}}</td>
+                                                <td class="text-center">{{dto.unregistered_at}}</td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-5">
+                                        <div id="showPage" class="dataTables_info" role="status" aria-live="polite">
+                                            Showing {{currentPage}} to 10 of {{totalElements}} entries
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-7">
+                                        <div class="dataTables_paginate paging_simple_numbers" id="pageBtn">
+                                            <ul class="pagination">
+                                                <li class="paginate_button previous" id="previousBtn">
+                                                    <a href="javascript:;" v-on:click="previousClick()">이전</a>
+                                                </li>
+
+                                                <li class="paginate_button" v-for="btn in btnList" v-bind:btn_id="btn" v-on:click="indexClick(btn)">
+                                                    <a href="javascript:;" aria-controls="example2">{{btn}}</a>
+                                                </li>
+
+                                                <li class="paginate_button next" id="nextBtn">
+                                                    <a href="javascript:;" v-on:click="nextClick()">다음</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- Regist Modal Popup Start -->
+        <div id="itemRegistModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"> <!--style="display: none;"-->
+            <div class="modal-dialog modal-default-layout" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" id="registCloseModalTopBtn" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                        <h2 class="modal-title modal-center" id="myModalLabel">상품 등록</h2>
+                    </div>
+                    <form id="registForm" class="modal-form">
+                        <div class="modal-body">
+                            <table id="registTable" class="table table-bordered table-hover dataTable" role="grid" aria-describedby="example2_info">
+                                <tbody>
+                                <tr role="row">
+                                    <th class="text-left modal-table-th" tabindex="0" rowspan="1" colspan="1">
+                                        상품
+                                        <span style="color: #FF5B6B;">&nbsp;*</span>
+                                    </th>
+                                </tr>
+                                <tr role="row" class="modal-tr odd">
+                                    <td class="text-left">
+                                        <input type="text" id="reg_name" name="name" class="inputV3">
+                                    </td>
+                                </tr>
+                                <tr role="row">
+                                    <th class="text-left modal-table-th" tabindex="0" rowspan="1" colspan="1">
+                                        상태
+                                        <span style="color: #FF5B6B;">&nbsp;*</span>
+                                    </th>
+                                </tr>
+                                <tr role="row" class="modal-tr odd">
+                                    <td class="text-left">
+                                        <select id="reg_status" name="status" class="selectV3">
+                                            <option value="" selected disabled hidden >선택</option>
+                                            <option value="REGISTERED">REGISTERED</option>
+                                            <option value="UNREGISTERED">UNREGISTERED</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr role="row">
+                                    <th class="text-left modal-table-th" tabindex="0" rowspan="1" colspan="1">
+                                        제목
+                                        <span style="color: #FF5B6B;">&nbsp;*</span>
+                                    </th>
+                                </tr>
+                                <tr role="row" class="modal-tr odd">
+                                    <td class="text-left">
+                                        <input type="text" id="reg_title" name="title" class="inputV3">
+                                    </td>
+                                </tr>
+                                <tr role="row">
+                                    <th class="text-left modal-table-th" tabindex="0" rowspan="1" colspan="1">
+                                        설명
+                                        <span style="color: #FF5B6B;">&nbsp;*</span>
+                                    </th>
+                                </tr>
+                                <tr role="row" class="modal-tr odd">
+                                    <td class="text-left">
+                                        <input type="text" id="reg_content" name="content" class="inputV3">
+                                    </td>
+                                </tr>
+                                <tr role="row">
+                                    <th class="text-left modal-table-th" tabindex="0" rowspan="1" colspan="1">
+                                        가격
+                                        <span style="color: #FF5B6B;">&nbsp;*</span>
+                                    </th>
+                                </tr>
+                                <tr role="row" class="modal-tr odd">
+                                    <td class="text-left">
+                                        <input type="text" id="reg_price" name="price" class="inputV3">
+                                    </td>
+                                </tr>
+                                <tr role="row">
+                                    <th class="text-left modal-table-th" tabindex="0" rowspan="1" colspan="1">
+                                        브랜드
+                                        <span style="color: #FF5B6B;">&nbsp;*</span>
+                                    </th>
+                                </tr>
+                                <tr role="row" class="modal-tr odd">
+                                    <td class="text-left">
+                                        <input type="text" id="reg_brand_name" name="brand_name" class="inputV3">
+                                    </td>
+                                </tr>
+                                <tr role="row">
+                                    <th class="text-left modal-table-th" tabindex="0" rowspan="1" colspan="1">
+                                        파트너
+                                        <span style="color: #FF5B6B;">&nbsp;*</span>
+                                    </th>
+                                </tr>
+                                <tr role="row" class="modal-tr odd">
+                                    <td class="text-left">
+                                        <select id="reg_partner_id" name="partner_id" class="selectV3">
+                                            <option value="" selected disabled hidden >선택</option>
+                                        </select>
+                                        <!--<input type="text" id="reg_partner_name" name="partner_name" class="inputV3">
+                                        <input type="hidden" id="reg_partner_id" name="partner_id">-->
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </form>
+                    <div class="modal-footer" style="text-align: center;">
+                        <button type="button" class="btn btn-primary btn-wide" id="registBtn">등록</button>
+                        <!--<button type="button" class="btn btn-default" id="registCloseModalBtn">취소</button>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--</script>-->
+        <!-- Regist Modal Popup End -->
+
+        <!-- Modify Modal Popup Start -->
+        <!--<script type="text/x-template" id="modify-template">-->
+        <div id="itemModifyModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"> <!--style="display: none;"-->
+            <div class="modal-dialog modal-default-layout" role="document"\>
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" id="modifyCloseModalTopBtn" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">×</span></button>
+                        <h2 class="modal-title modal-center">상품 상세</h2>
+                    </div>
+                    <form id="modifyForm" class="modal-form">
+                        <div class="modal-body" id="adminModifyTableDiv">
+                            <table id="modifyTable" class="table table-bordered table-hover dataTable" role="grid"
+                                   aria-describedby="example2_info">
+                                <tbody>
+                                <tr role="row">
+                                    <th class="text-left modal-table-th" tabindex="0" rowspan="1" colspan="1">
+                                        상품
+                                        <span style="color: #FF5B6B;">&nbsp;*</span>
+                                    </th>
+                                </tr>
+                                <tr role="row" class="modal-tr odd">
+                                    <td class="text-left">
+                                        <input type="text" id="mod_name" name="name" class="inputV3">
+                                        <input type="hidden" id="mod_id" name="id">
+                                    </td>
+                                </tr>
+                                <tr role="row">
+                                    <th class="text-left modal-table-th" tabindex="0" rowspan="1" colspan="1">
+                                        상태
+                                        <span style="color: #FF5B6B;">&nbsp;*</span>
+                                    </th>
+                                </tr>
+                                <tr role="row" class="modal-tr odd">
+                                    <td class="text-left">
+                                        <select id="mod_status" name="status" class="selectV3">
+                                            <option value="" selected disabled hidden >선택</option>
+                                            <option value="REGISTERED">REGISTERED</option>
+                                            <option value="UNREGISTERED">UNREGISTERED</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr role="row">
+                                    <th class="text-left modal-table-th" tabindex="0" rowspan="1" colspan="1">
+                                        제목
+                                        <span style="color: #FF5B6B;">&nbsp;*</span>
+                                    </th>
+                                </tr>
+                                <tr role="row" class="modal-tr odd">
+                                    <td class="text-left">
+                                        <input type="text" id="mod_title" name="title" class="inputV3">
+                                    </td>
+                                </tr>
+                                <tr role="row">
+                                    <th class="text-left modal-table-th" tabindex="0" rowspan="1" colspan="1">
+                                        설명
+                                        <span style="color: #FF5B6B;">&nbsp;*</span>
+                                    </th>
+                                </tr>
+                                <tr role="row" class="modal-tr odd">
+                                    <td class="text-left">
+                                        <input type="text" id="mod_content" name="content" class="inputV3">
+                                    </td>
+                                </tr>
+                                <tr role="row">
+                                    <th class="text-left modal-table-th" tabindex="0" rowspan="1" colspan="1">
+                                        가격
+                                        <span style="color: #FF5B6B;">&nbsp;*</span>
+                                    </th>
+                                </tr>
+                                <tr role="row" class="modal-tr odd">
+                                    <td class="text-left">
+                                        <input type="text" id="mod_price" name="price" class="inputV3">
+                                    </td>
+                                </tr>
+                                <tr role="row">
+                                    <th class="text-left modal-table-th" tabindex="0" rowspan="1" colspan="1">
+                                        브랜드
+                                        <span style="color: #FF5B6B;">&nbsp;*</span>
+                                    </th>
+                                </tr>
+                                <tr role="row" class="modal-tr odd">
+                                    <td class="text-left">
+                                        <input type="text" id="mod_brand_name" name="brand_name" class="inputV3">
+                                    </td>
+                                </tr>
+                                <tr role="row">
+                                    <th class="text-left modal-table-th" tabindex="0" rowspan="1" colspan="1">
+                                        파트너
+                                        <span style="color: #FF5B6B;">&nbsp;*</span>
+                                    </th>
+                                </tr>
+                                <tr role="row" class="modal-tr odd">
+                                    <td class="text-left">
+                                        <select id="mod_partner_id" name="partner_id" class="selectV3">
+                                            <option value="" selected disabled hidden >선택</option>
+                                        </select>
+                                        <!--<input type="text" id="mod_partner_name" name="partner_name" class="inputV3">
+                                        <input type="hidden" id="mod_partner_id" name="partner_id">-->
+                                    </td>
+                                </tr>
+                                <tr role="row">
+                                    <th class="text-left modal-table-th" tabindex="0" rowspan="1" colspan="1">
+                                        등록일
+                                    </th>
+                                </tr>
+                                <tr role="row" class="modal-tr odd">
+                                    <td class="text-left">
+                                            <span id="mod_registered_at">
+                                                <!--{{registered_at}}-->
+                                            </span>
+                                        <br>
+                                    </td>
+                                </tr>
+                                <tr role="row">
+                                    <th class="text-left modal-table-th" tabindex="0" rowspan="1" colspan="1">
+                                        등록해제일
+                                    </th>
+                                </tr>
+                                <tr role="row" class="modal-tr odd">
+                                    <td class="text-left">
+                                            <span id="mod_unregistered_at">
+                                                <!--{{registered_at}}-->
+                                            </span>
+                                        <br>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </form>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="modifyBtn">수정</button>
+                        <button type="button" class="btn btn-warning" id="deleteBtn">삭제</button>
+                        <button type="button" class="btn btn" id="modifyCloseModalBtn">취소</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--</script>-->
+        <!-- Modify Modal Popup End -->
+
+    </div>
+
+
+    <!-- Content End -->
+
+    <!-- Footer Start -->
+    <div th:replace="fragment/footer :: footer"></div>
+    <!-- Footer End -->
+
+    <!-- controlSidebar Start -->
+    <div th:replace="fragment/controlSidebar :: controlSidebar"></div>
+    <!-- controlSidebar End -->
+
+
+    <div class="control-sidebar-bg"></div>
+</div>
+
+<script src="/app/item/item.js"></script>
+</body>
+</html>

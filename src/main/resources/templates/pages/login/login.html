@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <link rel="stylesheet" href="/lib/css/login.css">
+    <meta charset="UTF-8">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+
+    <title>로그인 페이지</title>
+</head>
+<body>
+<div class="login-body">
+    <div class="login-wrap">
+        <div class="login-logo">
+        </div>
+        <div id="login-form"  class="login-form-box" style="text-align:center;">
+            <img src="/lib/img/login/img_txt_login.gif" alt="login/sign in" />
+            <form id="loginForm" action="/pages/login" method="post">
+                <input type="hidden" id="csrfValue" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                <fieldset style="border: 0px;">
+                    <div class="username logForm"><label for="username">username</label><input type="text" id="username" name="username" title="ID" value='' /></div>
+                    <div class="password logForm"><label for="password">password</label><input type="password" id="password" name="password" title="PW" value=''/></div>
+                    <div class="checkforms">
+                        <span class="idcheck"><input type="checkbox" id="login-idSave"><label for="login-idSave">아이디 저장</label></span>
+                    </div>
+                    <button id="login" name="login" title="Login" class="submit" ><span>Login</span></button>
+                    <button id="Join" name="Join" title="Join" class="submit-disabled" ><span>Join</span></button>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="/lib/js/jquery.min.js"></script>
+<script src='/common/encrypt/sha256.js'></script>
+<script src="/app/login/login.js"></script>
+<script src="/app/common/common.js"></script>
+</body>
+</html>
