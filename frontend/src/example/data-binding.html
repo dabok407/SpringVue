@@ -1,28 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+  <meta charset="UTF-8">
+  <title>Title</title>
 </head>
 <body>
 <div id="app">
-    <p>{{num}}</p>
-    <p>{{doubleNum}}</p>
+  <p v-bind:id="uuid" v-bind:class="vClass" v-bind:name="bindName">{{num}}</p>
+  <p>{{doubleNum}}</p>
+  <!-- v-if, v-else 는 dom자체를 제거 -->
+  <div v-if="loadYn">
+    Loading...
+  </div>
+  <div v-else>
+    test user has been logged in
+  </div>
+  <!-- v-show 는 style display none 처리 -->
+  <div v-show="loadYn">
+    Loading...
+  </div>
+  <div>
+    <input type="text" id="inputId" v-model="inputResult">
+    <p>{{inputResult}}</p>
+  </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script>
-new Vue({
-    el: '#app'
-    ,data: {
-        num: 10
-    }
-    ,computed: {
-        doubleNum: function () {
-            return this.num * 2;
+    new Vue({
+        el: '#app'
+        ,data: {
+            num: 10
+            ,uuid: 'abc1234'
+            ,vClass: 'text-blue'
+            ,vName: null
+            ,loadYn: true
+            ,inputResult: ''
         }
-    }
-})
+        ,computed: {
+            doubleNum: function () {
+                return this.num * 2;
+            },
+            bindName: function () {
+                this.vName = "abc";
+                return this.vName;
+            }
+        }
+    })
 </script>
 </body>
 </html>
