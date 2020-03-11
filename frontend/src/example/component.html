@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="app">
+    <app-header></app-header>
+    <app-content></app-content>
+</div>
+<div id="app2">
+    <app-footer></app-footer>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script>
+    // 전역 component
+    // Vue.component('컴포넌트 이름', '컴포넌트 내용');
+    Vue.component('app-header', {
+        template: '<h1>Header</h1>'
+    });
+    Vue.component('app-content', {
+        template: '<div>Content</div>'
+    });
+    new Vue({
+        el: '#app'
+    })
+    new Vue({
+        el: '#app2'
+        ,components: {
+            // 지역 component
+            // '컴포넌트 이름' : '컴포넌트 내용'
+            'app-footer' : {
+                template : '<div>app div</div>'
+            }
+        }
+    });
+</script>
+</body>
+</html>

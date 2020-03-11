@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div id="app"></div>
+
+    <script>
+        var div = document.querySelector('#app');
+        //div.innerHTML = "hello!"
+        var viewModel = {};
+
+        //즉시 실행 함수
+        (function () {
+            function init() {
+                // 객체의 동작을 재정의
+                Object.defineProperty(viewModel, 'str', {
+                    // 속성의 접근했을때의 동작을 정의
+                    get : function () {
+                        console.log('접근');
+                    }
+                    // 속성에 값을 할당했을때의 동작을 정의
+                    ,set : function (newValue) {
+                        console.log('할당',newValue);
+                        render(newValue);
+                    }
+                });
+            }
+
+            function render(value) {
+                div.innerHTML = value;
+            }
+
+            init();
+        })();
+    </script>
+</body>
+</html>
