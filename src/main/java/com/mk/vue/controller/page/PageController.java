@@ -84,4 +84,12 @@ public class PageController {
                 ;
     }
 
+    @RequestMapping("/vue")
+    public ModelAndView vue() {
+        ModelAndView modelAndView = new ModelAndView("/pages/index");
+        /*modelAndView.addObject("menuList", adminMenuService.getAdminMenu());
+        modelAndView.addObject("code", "orderGroup");*/
+        return modelAndView;
+    }
+
 }

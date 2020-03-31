@@ -45,6 +45,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 ,"/lib/**"
                 ,"/app/**"
                 ,"/common/**"
+                ,"/vue/**"
                                     ); // #3
     }
 
